@@ -1,7 +1,6 @@
 plugins {
   id 'com.android.library'
-  id 'org.jetbrains.kotlin.android'
-  id 'kotlin-kapt'
+  id 'kotlin-android'
 }
 
 android {
@@ -10,6 +9,8 @@ android {
   defaultConfig {
     minSdk 21
     targetSdk 31
+    versionCode 1
+    versionName "1.0"
 
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     consumerProguardFiles "consumer-rules.pro"
@@ -28,18 +29,24 @@ android {
   kotlinOptions {
     jvmTarget = '1.8'
   }
+  buildFeatures {
+    compose true
+  }
+  composeOptions {
+    kotlinCompilerExtensionVersion versions.compose
+  }
 }
 
 dependencies {
-  implementation project(":core:di")
-  implementation project(":domain:stock")
-  implementation project(":common:network")
+  implementation coreKtx
 
-  implementation retrofitDeps.core
-  implementation retrofitDeps.gsonConverter
+  // Compose
+  implementation composeDeps.runtime
+  implementation composeDeps.ui
+  implementation composeDeps.uiTooling
+  implementation composeDeps.material
+  implementation composeDeps.viewModel
+  implementation composeDeps.navigation
 
-  implementation daggerDeps.core
-  kapt daggerDeps.annotationProcessor
-
-  implementation coroutinesDeps.core
+  implementation lifecycleDeps.viewModel
 }

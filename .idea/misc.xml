@@ -5,10 +5,11 @@
       <map>
         <entry key="..\:/repositories/StockApp/app/src/main/res/layout/fragment_first.xml" value="0.16875" />
         <entry key="..\:/repositories/StockApp/app/src/main/res/menu/menu_main.xml" value="0.16875" />
+        <entry key="..\:/repositories/StockApp/core/ui/src/main/res/drawable/ic_baseline_alarm_24.xml" value="0.1815" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
