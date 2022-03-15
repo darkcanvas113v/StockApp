@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sillyapps.stockapp.theme
+package com.sillyapps.ui.theme
 
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
@@ -30,9 +30,6 @@ fun AppTheme(content: @Composable () -> Unit) {
     MaterialTheme(colors = ColorPalette, typography = Typography, content = content)
 }
 
-/**
- * A theme overlay used for dialogs.
- */
 @Composable
 fun AppDialogThemeOverlay(content: @Composable () -> Unit) {
 
@@ -42,7 +39,6 @@ fun AppDialogThemeOverlay(content: @Composable () -> Unit) {
         onSurface = Color.White
     )
 
-    // Copy the current [Typography] and replace some text styles for this theme.
     val currentTypography = MaterialTheme.typography
     val dialogTypography = currentTypography.copy(
         body2 = currentTypography.body1.copy(

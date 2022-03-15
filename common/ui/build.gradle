@@ -1,7 +1,6 @@
 plugins {
   id 'com.android.library'
   id 'org.jetbrains.kotlin.android'
-  id 'kotlin-kapt'
 }
 
 android {
@@ -28,18 +27,23 @@ android {
   kotlinOptions {
     jvmTarget = '1.8'
   }
+  buildFeatures {
+    compose true
+  }
+  composeOptions {
+    kotlinCompilerExtensionVersion versions.compose
+  }
 }
 
 dependencies {
-  implementation project(":core:di")
-  implementation project(":domain:stock")
-  implementation project(":core:network")
+  implementation coreKtx
 
-  implementation retrofitDeps.core
-  implementation retrofitDeps.gsonConverter
-
-  implementation daggerDeps.core
-  kapt daggerDeps.annotationProcessor
-
-  implementation coroutinesDeps.core
+  implementation composeDeps.runtime
+  implementation composeDeps.ui
+  implementation composeDeps.uiTooling
+  implementation composeDeps.foundation
+  implementation composeDeps.foundationLayout
+  implementation composeDeps.material
+  implementation composeDeps.materialIcons
+  implementation composeDeps.materialIconsExtended
 }

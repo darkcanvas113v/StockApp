@@ -3,6 +3,7 @@ package com.sillyapps.main_screen.api
 import androidx.compose.runtime.Composable
 import com.sillyapps.core_ui.daggerViewModel
 import com.sillyapps.main_screen.di.DaggerMainScreenComponent
+import com.sillyapps.main_screen.ui.MainScreen
 import com.sillyapps.main_screen.ui.MainScreenViewModel
 import com.sillyapps.stock.StockRepository
 
@@ -18,7 +19,7 @@ fun MainScreenNavigation(
   val viewModel: MainScreenViewModel = daggerViewModel {
     component.getViewModel()
   }
-
-
+  
+  MainScreen(stateHolder = viewModel)
 
 }

@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="1.8">
+    <bytecodeTargetLevel target="1.7">
       <module name="StockApp.app" target="11" />
+      <module name="StockApp.common.network" target="1.8" />
+      <module name="StockApp.common.ui" target="11" />
+      <module name="StockApp.core.di" target="1.8" />
       <module name="StockApp.core.ui" target="11" />
       <module name="StockApp.data.stock" target="11" />
+      <module name="StockApp.domain.stock" target="1.8" />
       <module name="StockApp.features.main-screen" target="11" />
     </bytecodeTargetLevel>
   </component>

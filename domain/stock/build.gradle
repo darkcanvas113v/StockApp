@@ -10,7 +10,7 @@ java {
 }
 
 dependencies {
-  implementation project(":common:network")
+  implementation project(":core:network")
 
   implementation daggerDeps.core
   kapt daggerDeps.annotationProcessor

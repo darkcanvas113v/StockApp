@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sillyapps.stockapp.theme
+package com.sillyapps.ui.theme
 
 import androidx.compose.material.darkColors
 import androidx.compose.ui.graphics.Color
@@ -25,7 +25,6 @@ val DarkBlue900 = Color(0xFF26282F)
 val Gray = Color(0xFF7C8086)
 val Red = Color(0xFFEB5757)
 
-// Rally is always dark themed.
 val ColorPalette = darkColors(
     primary = Green500,
     surface = DarkBlue900,
