@@ -8,4 +8,6 @@ interface StockRepository {
 
   fun getStocks(): Flow<Resource<List<Stock>>>
 
+  suspend fun loadStockPrices(fromIndex: Int, toIndex: Int)
+
 }

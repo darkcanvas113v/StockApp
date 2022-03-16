@@ -32,11 +32,12 @@ android {
 
 dependencies {
   implementation project(":core:di")
+  implementation project(":core:util")
   implementation project(":domain:stock")
   implementation project(":core:network")
 
   implementation retrofitDeps.core
-  implementation retrofitDeps.gsonConverter
+  implementation retrofitDeps.moshiConverter
 
   implementation okHttpDeps.core
   implementation okHttpDeps.loggingInterceptor
@@ -45,4 +46,9 @@ dependencies {
   kapt daggerDeps.annotationProcessor
 
   implementation coroutinesDeps.core
+  
+  implementation moshiDeps.core
+  kapt moshiDeps.codegen
+
+  implementation timberDep
 }

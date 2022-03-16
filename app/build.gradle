@@ -79,4 +79,6 @@ dependencies {
 
   implementation okHttpDeps.core
   implementation okHttpDeps.loggingInterceptor
+
+  implementation timberDep
 }

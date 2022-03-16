@@ -17,7 +17,9 @@ import com.sillyapps.stockapp.features.main_screen.ui.model.MainScreenState
 import com.sillyapps.stockapp.domain.stock.model.Stock
 import com.sillyapps.stockapp.common.ui.theme.AppTheme
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
 @Composable
 fun MainScreen(
@@ -25,7 +27,7 @@ fun MainScreen(
 ) {
   val state by remember(stateHolder) {
     stateHolder.getState()
-  }
+  }.collectAsState(initial = MainScreenState(isLoading = true))
 
   Surface(modifier = Modifier.fillMaxSize()) {
     Box() {
@@ -60,16 +62,14 @@ fun MainScreenPreview() {
     Stock(symbol = "AMAZ", name = "Amazon", price = 256.0),
   )
 
-  val state = remember {
-    flow {
+  val state = flow {
       emit(MainScreenState(isLoading = true))
       delay(2000L)
       emit(MainScreenState(stocks = data))
-    }
-  }.collectAsState(initial = MainScreenState(isLoading = true))
+  }
   
   val stateHolder = object : StateHolder {
-    override fun getState(): State<MainScreenState> = state
+    override fun getState(): Flow<MainScreenState> = state
   }
 
   AppTheme {
