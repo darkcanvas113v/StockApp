@@ -11,8 +11,10 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
+    val app = (application as App)
+
     setContent {
-      RootContainer()
+      RootContainer(app.stockDataComponent)
     }
   }
 }

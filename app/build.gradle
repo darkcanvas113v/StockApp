@@ -40,6 +40,9 @@ android {
 
 dependencies {
   implementation project(":common:ui")
+  implementation project(":data:stock")
+  implementation project(":domain:stock")
+  implementation project(":features:main-screen")
 
   implementation coreKtx
   implementation appCompat
