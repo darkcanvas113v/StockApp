@@ -27,7 +27,7 @@ fun StockItem(
     ) {
       Text(
         text = stock.name,
-        style = Typography.h4
+        style = Typography.h5
       )
 
       Row(

@@ -22,7 +22,7 @@ class MainScreenViewModel @Inject constructor(
       getStocksUseCase().collect {
         when (it) {
           is Resource.Success -> {
-            MainScreenState(stocks = it.data)
+            _state.value = MainScreenState(stocks = it.data)
           }
 
           is Resource.Loading -> {

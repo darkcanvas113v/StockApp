@@ -39,6 +39,7 @@ android {
 }
 
 dependencies {
+  implementation project(":core:di")
   implementation project(":common:ui")
   implementation project(":data:stock")
   implementation project(":domain:stock")
@@ -75,4 +76,7 @@ dependencies {
 
   implementation daggerDeps.core
   kapt daggerDeps.annotationProcessor
+
+  implementation okHttpDeps.core
+  implementation okHttpDeps.loggingInterceptor
 }

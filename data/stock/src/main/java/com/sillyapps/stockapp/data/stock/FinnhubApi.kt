@@ -5,7 +5,7 @@ import retrofit2.http.GET
 
 interface FinnhubApi {
 
-  @GET("/stock/symbol?exchange=US")
+  @GET("/api/v1/stock/symbol?exchange=US")
   suspend fun getStocks(): List<StockSymbolDto>
 
 //  @GET("/quote?symbol={stockId}")

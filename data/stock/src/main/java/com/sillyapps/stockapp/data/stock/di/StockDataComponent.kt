@@ -8,6 +8,7 @@ import com.sillyapps.stockapp.domain.stock.StockRepository
 import dagger.BindsInstance
 import dagger.Component
 import kotlinx.coroutines.CoroutineScope
+import okhttp3.OkHttpClient
 
 @FeatureScope
 @Component(modules = [IOModule::class, RemoteModule::class, RepositoryModule::class])

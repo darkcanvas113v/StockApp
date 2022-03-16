@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Surface
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -15,6 +16,8 @@ import com.sillyapps.stockapp.features.main_screen.ui.components.StockItem
 import com.sillyapps.stockapp.features.main_screen.ui.model.MainScreenState
 import com.sillyapps.stockapp.domain.stock.model.Stock
 import com.sillyapps.stockapp.common.ui.theme.AppTheme
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
 
 @Composable
 fun MainScreen(
@@ -28,17 +31,17 @@ fun MainScreen(
     Box() {
       if (state.isLoading) {
         CircularProgressIndicator(
-          modifier = Modifier.fillMaxSize()
+          modifier = Modifier.align(Alignment.Center)
         )
-        return@Surface
       }
-
-      LazyColumn(
-        contentPadding = PaddingValues(top = 16.dp),
-        modifier = Modifier.fillMaxSize()
-      ) {
-        items(items = state.stocks ?: emptyList()) { stock ->
-          StockItem(stock = stock)
+      else {
+        LazyColumn(
+          contentPadding = PaddingValues(top = 16.dp),
+          modifier = Modifier.fillMaxSize()
+        ) {
+          items(items = state.stocks ?: emptyList()) { stock ->
+            StockItem(stock = stock)
+          }
         }
       }
     }
@@ -58,12 +61,12 @@ fun MainScreenPreview() {
   )
 
   val state = remember {
-    mutableStateOf(
-      MainScreenState(
-        isLoading = true,
-        stocks = data)
-    )
-  }
+    flow {
+      emit(MainScreenState(isLoading = true))
+      delay(2000L)
+      emit(MainScreenState(stocks = data))
+    }
+  }.collectAsState(initial = MainScreenState(isLoading = true))
   
   val stateHolder = object : StateHolder {
     override fun getState(): State<MainScreenState> = state

@@ -38,6 +38,9 @@ dependencies {
   implementation retrofitDeps.core
   implementation retrofitDeps.gsonConverter
 
+  implementation okHttpDeps.core
+  implementation okHttpDeps.loggingInterceptor
+
   implementation daggerDeps.core
   kapt daggerDeps.annotationProcessor
 
