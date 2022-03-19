@@ -11,13 +11,20 @@ import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import javax.inject.Qualifier
+
+@Qualifier
+annotation class HTTPClient
+
+@Qualifier
+annotation class WebSocketClient
 
 @Module
 object RemoteModule {
 
   @FeatureScope
   @Provides
-  fun provideFinnhubApi(client: OkHttpClient): FinnhubApi {
+  fun provideFinnhubApi(@HTTPClient client: OkHttpClient): FinnhubApi {
     return Retrofit.Builder()
       .baseUrl("https://finnhub.io/api/v1/")
       .client(client)
@@ -26,6 +33,7 @@ object RemoteModule {
       .create(FinnhubApi::class.java)
   }
 
+  @HTTPClient
   @FeatureScope
   @Provides
   fun provideHttpClient(): OkHttpClient {
@@ -33,15 +41,28 @@ object RemoteModule {
     loggingInterceptor.level = HttpLoggingInterceptor.Level.HEADERS
 
     return OkHttpClient.Builder()
-      .addInterceptor(AddApiKeyInterceptor())
+      .addInterceptor(AddApiKeyInterceptor("c8mv5g2ad3id1m4i6m1g"))
       .addInterceptor(loggingInterceptor)
       .build()
   }
 
-  class AddApiKeyInterceptor(): Interceptor {
+  @WebSocketClient
+  @FeatureScope
+  @Provides
+  fun provideWebSocketHttpClient(): OkHttpClient {
+    val loggingInterceptor = HttpLoggingInterceptor()
+    loggingInterceptor.level = HttpLoggingInterceptor.Level.HEADERS
+
+    return OkHttpClient.Builder()
+      .addInterceptor(AddApiKeyInterceptor("c8mv5g2ad3id1m4i6m1g"))
+      .addInterceptor(loggingInterceptor)
+      .build()
+  }
+
+  class AddApiKeyInterceptor(private val key: String): Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
       val originalRequest = chain.request()
-      val url = originalRequest.url.newBuilder().addQueryParameter("token", "c8mv5g2ad3id1m4i6m1g").build()
+      val url = originalRequest.url.newBuilder().addQueryParameter("token", key).build()
       val requestWithApiKey = originalRequest.newBuilder().url(url).build()
 
       return chain.proceed(requestWithApiKey)

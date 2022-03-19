@@ -1,9 +1,8 @@
 package com.sillyapps.stockapp.data.stock
 
-import com.sillyapps.stockapp.data.stock.dto.QuoteDto
-import com.sillyapps.stockapp.data.stock.dto.StockSymbolDto
+import com.sillyapps.stockapp.data.stock.models.QuoteDto
+import com.sillyapps.stockapp.data.stock.models.StockSymbolDto
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface FinnhubApi {

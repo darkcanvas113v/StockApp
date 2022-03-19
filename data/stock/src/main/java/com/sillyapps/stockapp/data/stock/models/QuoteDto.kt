@@ -1,4 +1,4 @@
-package com.sillyapps.stockapp.data.stock.dto
+package com.sillyapps.stockapp.data.stock.models
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
