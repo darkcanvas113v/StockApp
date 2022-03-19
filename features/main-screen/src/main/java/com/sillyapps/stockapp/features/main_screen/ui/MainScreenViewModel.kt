@@ -8,12 +8,13 @@ import com.sillyapps.stockapp.domain.stock.usecases.GetStocksUseCase
 import com.sillyapps.stockapp.domain.stock.usecases.LoadStocksPriceUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 class MainScreenViewModel @Inject constructor(
-  private val getStocksUseCase: GetStocksUseCase
+  private val getStocksUseCase: GetStocksUseCase,
+  private val loadStocksPriceUseCase: LoadStocksPriceUseCase
 ): ViewModel(), StateHolder {
 
   private val _state = MutableStateFlow(MainScreenState())
@@ -47,5 +48,12 @@ class MainScreenViewModel @Inject constructor(
   }
 
   override fun getState() = _state
+
+  override fun loadStockPrices(stockSymbols: List<String>) {
+    Timber.e("Loading items... size: ${stockSymbols.size}")
+    viewModelScope.launch {
+      loadStocksPriceUseCase(stockSymbols)
+    }
+  }
 
 }

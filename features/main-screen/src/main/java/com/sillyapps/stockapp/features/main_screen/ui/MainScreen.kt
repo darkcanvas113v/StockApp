@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -21,6 +22,7 @@ import com.sillyapps.stockapp.common.ui.theme.AppTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import timber.log.Timber
 
 @Composable
 fun MainScreen(
@@ -29,6 +31,15 @@ fun MainScreen(
   val state by remember(stateHolder) {
     stateHolder.getState()
   }.collectAsState(initial = MainScreenState())
+
+  val listState = rememberLazyListState()
+
+  var prevVisibleItemStart = remember {
+    0
+  }
+  var prevVisibleItemEnd = remember {
+    0
+  }
 
   Surface(modifier = Modifier.fillMaxSize()) {
     Box() {
@@ -57,18 +68,37 @@ fun MainScreen(
           }
         }
         MainScreenState.Status.READY -> {
+
+          val visibleItemEnd =
+            listState.firstVisibleItemIndex + listState.layoutInfo.visibleItemsInfo.size
+
           LazyColumn(
             contentPadding = PaddingValues(top = 16.dp),
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            state = listState
           ) {
-            items(items = state.stocks ?: emptyList()) { stock ->
+            val stocks = state.stocks ?: emptyList()
+
+            if (!listState.isScrollInProgress &&
+              (prevVisibleItemStart != listState.firstVisibleItemIndex || prevVisibleItemEnd != visibleItemEnd)) {
+              stateHolder.loadStockPrices(
+                listState.layoutInfo.visibleItemsInfo.map { stocks[it.index].symbol }
+              )
+
+              prevVisibleItemStart = listState.firstVisibleItemIndex
+              prevVisibleItemEnd = visibleItemEnd
+
+              Timber.e("First visible element: ${stocks[prevVisibleItemStart].name}. Size: ${listState.layoutInfo.totalItemsCount}")
+            }
+
+            items(items = stocks) { stock ->
               StockItem(stock = stock)
             }
           }
         }
       }
     }
-    
+
   }
 
 }
@@ -84,13 +114,17 @@ fun MainScreenPreview() {
   )
 
   val state = flow {
-      emit(MainScreenState())
-      delay(2000L)
-      emit(MainScreenState(stocks = data))
+    emit(MainScreenState())
+    delay(2000L)
+    emit(MainScreenState(stocks = data))
   }
-  
+
   val stateHolder = object : StateHolder {
     override fun getState(): Flow<MainScreenState> = state
+
+    override fun loadStockPrices(stockSymbols: List<String>) {
+
+    }
   }
 
   AppTheme {

@@ -74,4 +74,6 @@ dependencies {
 
   implementation daggerDeps.core
   kapt daggerDeps.annotationProcessor
+
+  implementation timberDep
 }
