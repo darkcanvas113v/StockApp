@@ -20,6 +20,23 @@ class MainScreenViewModel @Inject constructor(
   private val _state = MutableStateFlow(MainScreenState())
 
   init {
+    loadStocks()
+  }
+
+  override fun getState() = _state
+
+  override fun loadStockPrices(stockSymbols: List<String>) {
+    Timber.e("Loading items... size: ${stockSymbols.size}")
+    viewModelScope.launch {
+      loadStocksPriceUseCase(stockSymbols)
+    }
+  }
+
+  override fun reload() {
+    loadStocks()
+  }
+
+  private fun loadStocks() {
     viewModelScope.launch {
       getStocksUseCase().collect {
         when (it) {
@@ -44,15 +61,6 @@ class MainScreenViewModel @Inject constructor(
           }
         }
       }
-    }
-  }
-
-  override fun getState() = _state
-
-  override fun loadStockPrices(stockSymbols: List<String>) {
-    Timber.e("Loading items... size: ${stockSymbols.size}")
-    viewModelScope.launch {
-      loadStocksPriceUseCase(stockSymbols)
     }
   }
 

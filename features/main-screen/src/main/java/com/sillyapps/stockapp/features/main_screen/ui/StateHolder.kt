@@ -11,4 +11,6 @@ interface StateHolder {
 
   fun loadStockPrices(stockSymbols: List<String>)
 
+  fun reload()
+
 }

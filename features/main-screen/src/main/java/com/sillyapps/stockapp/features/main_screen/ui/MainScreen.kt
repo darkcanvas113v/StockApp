@@ -19,6 +19,9 @@ import com.sillyapps.stockapp.features.main_screen.ui.components.StockItem
 import com.sillyapps.stockapp.features.main_screen.ui.model.MainScreenState
 import com.sillyapps.stockapp.domain.stock.model.Stock
 import com.sillyapps.stockapp.common.ui.theme.AppTheme
+import com.sillyapps.stockapp.features.main_screen.ui.components.DefaultFragment
+import com.sillyapps.stockapp.features.main_screen.ui.components.ErrorScreen
+import com.sillyapps.stockapp.features.main_screen.ui.components.LoadingFragment
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -32,69 +35,22 @@ fun MainScreen(
     stateHolder.getState()
   }.collectAsState(initial = MainScreenState())
 
-  val listState = rememberLazyListState()
-
-  var prevVisibleItemStart = remember {
-    0
-  }
-  var prevVisibleItemEnd = remember {
-    0
-  }
-
   Surface(modifier = Modifier.fillMaxSize()) {
-    Box() {
+    Box(contentAlignment = Alignment.Center) {
       when (state.status) {
         MainScreenState.Status.LOADING -> {
-          CircularProgressIndicator(
-            modifier = Modifier.align(Alignment.Center)
-          )
+          LoadingFragment()
         }
         MainScreenState.Status.ERROR -> {
-          state.error?.let {
-            when (it.type) {
-              Resource.Error.Type.BAD_CONNECTION -> {
-                Text(
-                  text = "Couldn't reach server, please check your internet connection.",
-                  modifier = Modifier.align(Alignment.Center)
-                )
-              }
-              Resource.Error.Type.UNKNOWN -> {
-                Text(
-                  text = "Unknown error.",
-                  modifier = Modifier.align(Alignment.Center)
-                )
-              }
-            }
-          }
+          ErrorScreen(
+            error = state.error!!,
+            onReload = stateHolder::reload
+          )
         }
         MainScreenState.Status.READY -> {
-
-          val visibleItemEnd =
-            listState.firstVisibleItemIndex + listState.layoutInfo.visibleItemsInfo.size
-
-          LazyColumn(
-            contentPadding = PaddingValues(top = 16.dp),
-            modifier = Modifier.fillMaxSize(),
-            state = listState
-          ) {
-            val stocks = state.stocks ?: emptyList()
-
-            if (!listState.isScrollInProgress &&
-              (prevVisibleItemStart != listState.firstVisibleItemIndex || prevVisibleItemEnd != visibleItemEnd)) {
-              stateHolder.loadStockPrices(
-                listState.layoutInfo.visibleItemsInfo.map { stocks[it.index].symbol }
-              )
-
-              prevVisibleItemStart = listState.firstVisibleItemIndex
-              prevVisibleItemEnd = visibleItemEnd
-
-              Timber.e("First visible element: ${stocks[prevVisibleItemStart].name}. Size: ${listState.layoutInfo.totalItemsCount}")
-            }
-
-            items(items = stocks) { stock ->
-              StockItem(stock = stock)
-            }
-          }
+          DefaultFragment(
+            items = state.stocks ?: emptyList(),
+            onLoadPrices = stateHolder::loadStockPrices)
         }
       }
     }
@@ -123,6 +79,10 @@ fun MainScreenPreview() {
     override fun getState(): Flow<MainScreenState> = state
 
     override fun loadStockPrices(stockSymbols: List<String>) {
+
+    }
+
+    override fun reload() {
 
     }
   }

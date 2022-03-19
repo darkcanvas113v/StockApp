@@ -36,7 +36,7 @@ class StockDataSourceImpl @Inject constructor(
   private val messageAdapter = Moshi.Builder().build().adapter(ServerMessageDto::class.java)
   private val requestAdapter = Moshi.Builder().build().adapter(ServerRequestDto::class.java)
 
-  private val webSocket: WebSocket = kotlin.run {
+  private val webSocket: WebSocket by lazy {
     val request = Request.Builder()
       .url("wss://ws.finnhub.io/")
       .build()
