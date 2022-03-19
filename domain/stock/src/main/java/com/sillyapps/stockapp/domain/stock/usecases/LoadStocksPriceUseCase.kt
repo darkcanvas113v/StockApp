@@ -7,8 +7,8 @@ class LoadStocksPriceUseCase @Inject constructor(
   private val repository: StockRepository
 ) {
 
-  suspend operator fun invoke(fromIndex: Int, toIndex: Int) {
-    repository.loadStockPrices(fromIndex, toIndex)
+  suspend operator fun invoke(stockSymbols: List<String>) {
+    repository.loadStockPrices(stockSymbols)
   }
 
 }

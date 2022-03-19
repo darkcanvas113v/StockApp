@@ -9,6 +9,6 @@ interface StockDataSource {
 
   fun getStocks(): Flow<List<Stock>>
 
-  suspend fun loadStockPrices(fromIndex: Int, toIndex: Int)
+  suspend fun loadStockPrices(stockSymbols: List<String>)
 
 }

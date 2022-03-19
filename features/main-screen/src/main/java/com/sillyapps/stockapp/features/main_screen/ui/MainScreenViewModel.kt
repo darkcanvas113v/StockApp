@@ -1,7 +1,5 @@
 package com.sillyapps.stockapp.features.main_screen.ui
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sillyapps.stockapp.features.main_screen.ui.model.MainScreenState
@@ -10,12 +8,12 @@ import com.sillyapps.stockapp.domain.stock.usecases.GetStocksUseCase
 import com.sillyapps.stockapp.domain.stock.usecases.LoadStocksPriceUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MainScreenViewModel @Inject constructor(
-  private val getStocksUseCase: GetStocksUseCase,
-  private val loadStocksPriceUseCase: LoadStocksPriceUseCase
+  private val getStocksUseCase: GetStocksUseCase
 ): ViewModel(), StateHolder {
 
   private val _state = MutableStateFlow(MainScreenState())
@@ -25,16 +23,22 @@ class MainScreenViewModel @Inject constructor(
       getStocksUseCase().collect {
         when (it) {
           is Resource.Success -> {
-            _state.value = MainScreenState(stocks = it.data)
+            _state.value = MainScreenState(
+              status = MainScreenState.Status.READY,
+              stocks = it.data
+            )
           }
 
           is Resource.Loading -> {
-            _state.value = MainScreenState(isLoading = true)
+            _state.value = MainScreenState(
+              status = MainScreenState.Status.LOADING
+            )
           }
 
           is Resource.Error -> {
             _state.value = MainScreenState(
-              error = it.message ?: "An unexpected error occured."
+              status = MainScreenState.Status.ERROR,
+              error = it
             )
           }
         }

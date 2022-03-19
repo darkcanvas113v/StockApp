@@ -2,10 +2,8 @@ package com.sillyapps.stockapp.data.stock
 
 import com.sillyapps.core_di.modules.IOCoroutineScope
 import com.sillyapps.core_di.modules.IODispatcher
-import com.sillyapps.core_network.Resource
 import com.sillyapps.core_util.BiDirectionalMap
 import com.sillyapps.core_util.modify
-import com.sillyapps.stockapp.data.stock.di.WebSocketClient
 import com.sillyapps.stockapp.data.stock.models.ServerMessageDto
 import com.sillyapps.stockapp.data.stock.models.ServerRequestDto
 import com.sillyapps.stockapp.domain.stock.model.Stock
@@ -17,18 +15,20 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.*
+import retrofit2.HttpException
 import timber.log.Timber
+import java.io.IOException
 import javax.inject.Inject
 
 class StockDataSourceImpl @Inject constructor(
-  @WebSocketClient private val httpClient: OkHttpClient,
   @IOCoroutineScope private val ioScope: CoroutineScope,
   @IODispatcher private val ioDispatcher: CoroutineDispatcher,
+
+  private val httpClient: OkHttpClient,
   private val finnhubApi: FinnhubApi
 ): StockDataSource {
 
-  private var lastFrom: Int = 0
-  private var lastTo: Int = 0
+  private var lastLoadedStocks: List<String> = emptyList()
   private val stockPosToSymbolMap = BiDirectionalMap<Int, String>()
 
   private val mStocks: MutableStateFlow<List<Stock>> = MutableStateFlow(emptyList())
@@ -74,36 +74,49 @@ class StockDataSourceImpl @Inject constructor(
     }
 
     mStocks.value = stocks
-    loadStockPrices(0, 10)
   }
 
   override fun getStocks(): Flow<List<Stock>> {
     return mStocks
   }
 
-  override suspend fun loadStockPrices(fromIndex: Int, toIndex: Int) = withContext(ioDispatcher) {
+  override suspend fun loadStockPrices(stockSymbols: List<String>) = withContext(ioDispatcher) {
 
-    for (i in lastFrom until lastTo) {
-      val request = requestAdapter.toJson(ServerRequestDto(ServerRequestDto.TYPE_UNSUBSCRIBE, mStocks.value[i].symbol))
+    for (symbol in lastLoadedStocks) {
+      if (stockSymbols.contains(symbol)) continue
+
+      val request = requestAdapter.toJson(ServerRequestDto(ServerRequestDto.TYPE_UNSUBSCRIBE, symbol))
       Timber.e("Requesting: $request")
       webSocket.send(request)
     }
 
-    for (i in fromIndex until toIndex) {
-      val value = mStocks.value[i]
+    for (stockSymbol in stockSymbols) {
+      if (lastLoadedStocks.contains(stockSymbol)) continue
 
-      if (value.price == null) {
-        val price = finnhubApi.getStockQuoteBySymbol(value.symbol)
+      val stockPos = stockPosToSymbolMap.getByValue(stockSymbol)!!
+      val value = mStocks.value[stockPos]
 
-        mStocks.value = mStocks.value.modify(i, value.copy(price = price.currentPrice))
-      }
+      val price = getStockPrice(value)
+      mStocks.value = mStocks.value.modify(stockPos, value.copy(price = price))
 
-      val request = requestAdapter.toJson(ServerRequestDto(ServerRequestDto.TYPE_SUBSCRIBE, value.symbol))
+      val request = requestAdapter.toJson(ServerRequestDto(ServerRequestDto.TYPE_SUBSCRIBE, stockSymbol))
       Timber.e("Requesting: $request")
       webSocket.send(request)
     }
-    lastFrom = fromIndex
-    lastTo = toIndex
+
+    lastLoadedStocks = stockSymbols
+  }
+
+  private suspend fun getStockPrice(stock: Stock): Double? {
+    try {
+      val price = finnhubApi.getStockQuoteBySymbol(stock.symbol)
+      return price.currentPrice
+    } catch (e: HttpException) {
+      Timber.e(e.localizedMessage ?: "An unexpected error occured")
+    } catch (e: IOException) {
+      Timber.e("Couldn't reach server. Check your internet connection.")
+    }
+    return null
   }
 
 }

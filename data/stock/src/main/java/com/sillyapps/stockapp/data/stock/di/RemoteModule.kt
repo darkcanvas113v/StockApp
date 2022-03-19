@@ -13,27 +13,20 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Qualifier
 
-@Qualifier
-annotation class HTTPClient
-
-@Qualifier
-annotation class WebSocketClient
-
 @Module
 object RemoteModule {
 
   @FeatureScope
   @Provides
-  fun provideFinnhubApi(@HTTPClient client: OkHttpClient): FinnhubApi {
+  fun provideFinnhubApi(client: OkHttpClient): FinnhubApi {
     return Retrofit.Builder()
-      .baseUrl("https://finnhub.io/api/v1/")
+      .baseUrl("https://finnhub.io/")
       .client(client)
       .addConverterFactory(MoshiConverterFactory.create())
       .build()
       .create(FinnhubApi::class.java)
   }
 
-  @HTTPClient
   @FeatureScope
   @Provides
   fun provideHttpClient(): OkHttpClient {
@@ -41,20 +34,7 @@ object RemoteModule {
     loggingInterceptor.level = HttpLoggingInterceptor.Level.HEADERS
 
     return OkHttpClient.Builder()
-      .addInterceptor(AddApiKeyInterceptor("c8mv5g2ad3id1m4i6m1g"))
-      .addInterceptor(loggingInterceptor)
-      .build()
-  }
-
-  @WebSocketClient
-  @FeatureScope
-  @Provides
-  fun provideWebSocketHttpClient(): OkHttpClient {
-    val loggingInterceptor = HttpLoggingInterceptor()
-    loggingInterceptor.level = HttpLoggingInterceptor.Level.HEADERS
-
-    return OkHttpClient.Builder()
-      .addInterceptor(AddApiKeyInterceptor("c8mv5g2ad3id1m4i6m1g"))
+      .addInterceptor(AddApiKeyInterceptor("c8qt8paad3i8tv0jrp50"))
       .addInterceptor(loggingInterceptor)
       .build()
   }
