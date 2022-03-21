@@ -56,14 +56,13 @@ val Typography = Typography(
         fontSize = 34.sp
     ),
     h5 = TextStyle(
-        fontWeight = FontWeight.W700,
-        fontSize = 24.sp
+        fontWeight = FontWeight.W600,
+        fontSize = 20.sp
     ),
     h6 = TextStyle(
         fontWeight = FontWeight.Normal,
         fontSize = 18.sp,
         lineHeight = 20.sp,
-        fontFamily = EczarFontFamily,
         letterSpacing = 3.sp
     ),
     subtitle1 = TextStyle(

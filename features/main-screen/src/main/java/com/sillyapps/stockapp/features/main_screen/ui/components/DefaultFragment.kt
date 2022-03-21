@@ -43,8 +43,6 @@ fun DefaultFragment(
 
       prevVisibleItemStart = listState.firstVisibleItemIndex
       prevVisibleItemEnd = visibleItemEnd
-
-      Timber.e("First visible element: ${items[prevVisibleItemStart].name}. Size: ${listState.layoutInfo.totalItemsCount}")
     }
 
     items(items = items) { stock ->

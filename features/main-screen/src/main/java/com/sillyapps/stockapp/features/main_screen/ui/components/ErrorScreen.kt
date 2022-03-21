@@ -7,10 +7,12 @@ import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sillyapps.core_network.Resource
 import com.sillyapps.stockapp.domain.stock.model.Stock
+import com.sillyapps.stockapp.features.main_screen.R
 
 @Composable
 fun ErrorScreen(
@@ -23,7 +25,7 @@ fun ErrorScreen(
         horizontalAlignment = Alignment.CenterHorizontally
       ) {
         Text(
-          text = "Couldn't reach server, please check your internet connection.",
+          text = stringResource(id = R.string.no_internet),
           modifier = Modifier
             .padding(horizontal = 32.dp),
           textAlign = TextAlign.Center
@@ -34,14 +36,14 @@ fun ErrorScreen(
           modifier = Modifier.padding(top = 16.dp)
         ) {
           Text(
-            text = "Try again"
+            text = stringResource(id = R.string.try_again)
           )
         }
       }
     }
     Resource.Error.Type.UNKNOWN -> {
       Text(
-        text = "Unknown error.",
+        text = stringResource(id = R.string.unknown_error),
         modifier = Modifier
           .padding(horizontal = 32.dp),
         textAlign = TextAlign.Center

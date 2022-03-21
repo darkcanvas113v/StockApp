@@ -54,7 +54,9 @@ fun StockItem(
         CircularProgressIndicator()
       }
       else {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+          horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
           val changeValue = stock.percentChange ?: 0.0
 
           val changeIsPositive = (changeValue >= 0.0)
@@ -68,7 +70,7 @@ fun StockItem(
           )
           Text(
             text = "${stock.price} $",
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.h6,
             modifier = Modifier.padding(top = 4.dp)
           )
         }
