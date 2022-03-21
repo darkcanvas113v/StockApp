@@ -21,6 +21,7 @@ fun StockSymbolDto.toDomainModel(): Stock {
     return Stock(
         name = description,
         symbol = symbol,
+        percentChange = null,
         price = null
     )
 }

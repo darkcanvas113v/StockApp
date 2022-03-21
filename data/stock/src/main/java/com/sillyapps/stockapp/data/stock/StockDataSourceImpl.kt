@@ -96,8 +96,8 @@ class StockDataSourceImpl @Inject constructor(
       val stockPos = stockPosToSymbolMap.getByValue(stockSymbol)!!
       val value = mStocks.value[stockPos]
 
-      val price = getStockPrice(value)
-      mStocks.value = mStocks.value.modify(stockPos, value.copy(price = price))
+      val newStock = getStockPrice(value)
+      mStocks.value = mStocks.value.modify(stockPos, newStock)
 
       val request = requestAdapter.toJson(ServerRequestDto(ServerRequestDto.TYPE_SUBSCRIBE, stockSymbol))
       Timber.e("Requesting: $request")
@@ -107,16 +107,19 @@ class StockDataSourceImpl @Inject constructor(
     lastLoadedStocks = stockSymbols
   }
 
-  private suspend fun getStockPrice(stock: Stock): Double? {
+  private suspend fun getStockPrice(stock: Stock): Stock {
     try {
-      val price = finnhubApi.getStockQuoteBySymbol(stock.symbol)
-      return price.currentPrice
+      val stockQuote = finnhubApi.getStockQuoteBySymbol(stock.symbol)
+      return stock.copy(
+        price = stockQuote.currentPrice,
+        percentChange = stockQuote.percentChange
+      )
     } catch (e: HttpException) {
       Timber.e(e.localizedMessage ?: "An unexpected error occured")
     } catch (e: IOException) {
       Timber.e("Couldn't reach server. Check your internet connection.")
     }
-    return null
+    return stock
   }
 
 }

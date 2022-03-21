@@ -63,10 +63,10 @@ fun MainScreen(
 @Composable
 fun MainScreenPreview() {
   val data = listOf(
-    Stock(symbol = "APPL", name = "Apple", price = 410.0),
-    Stock(symbol = "MICR", name = "Microsoft", price = 540.0),
-    Stock(symbol = "TESL", name = "Tesla", price = 109.0),
-    Stock(symbol = "AMAZ", name = "Amazon", price = 256.0),
+    Stock(symbol = "APPL", name = "Apple", price = 410.0, percentChange = 2.0),
+    Stock(symbol = "MICR", name = "Microsoft", price = 540.0, percentChange = 2.0),
+    Stock(symbol = "TESL", name = "Tesla", price = 109.0, percentChange = 2.0),
+    Stock(symbol = "AMAZ", name = "Amazon", price = 256.0, percentChange = 2.0),
   )
 
   val state = flow {
