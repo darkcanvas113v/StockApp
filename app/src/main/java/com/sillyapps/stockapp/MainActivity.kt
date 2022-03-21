@@ -8,6 +8,8 @@ import com.sillyapps.stockapp.ui.RootContainer
 
 class MainActivity : AppCompatActivity() {
 
+  private val repository by lazy { (application as App).stockDataComponent.getRepository() }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
@@ -16,5 +18,10 @@ class MainActivity : AppCompatActivity() {
     setContent {
       RootContainer(app.stockDataComponent)
     }
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    repository.disconnect()
   }
 }

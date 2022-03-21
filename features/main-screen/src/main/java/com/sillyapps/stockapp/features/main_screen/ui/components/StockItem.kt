@@ -1,5 +1,7 @@
 package com.sillyapps.stockapp.features.main_screen.ui.components
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -24,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.sillyapps.stockapp.domain.stock.model.Stock
 import com.sillyapps.stockapp.common.ui.theme.AppTheme
 import com.sillyapps.stockapp.common.ui.theme.Typography
+import com.sillyapps.stockapp.domain.stock.model.Company
 import com.sillyapps.stockapp.domain.stock.model.Quote
 import com.sillyapps.stockapp.features.main_screen.R
 import com.skydoves.landscapist.CircularReveal
@@ -31,6 +34,7 @@ import com.skydoves.landscapist.glide.GlideImage
 import kotlin.math.abs
 import kotlin.math.round
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun StockItem(
   stock: Stock
@@ -64,20 +68,23 @@ fun StockItem(
           .weight(1f)
           .padding(end = 8.dp)
       ) {
-        Text(
-          text = if (stock.company?.name == null)
-            stock.name else
-            stock.company!!.name ?: "N\\A",
-          style = MaterialTheme.typography.h5,
-          overflow = TextOverflow.Ellipsis,
-          maxLines = 1
-        )
+        AnimatedContent(targetState = stock.company?.name) { targetText ->
+          Text(
+            text = targetText ?: stock.name,
+            style = MaterialTheme.typography.h5,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1
+          )
+        }
 
-        Text(
-          text = stock.company?.industry ?: "",
-          style = MaterialTheme.typography.body1,
-          modifier = Modifier.padding(top = 4.dp)
-        )
+        AnimatedContent(targetState = stock.company?.industry) { targetText ->
+          Text(
+            text = targetText ?: "N/A",
+            style = MaterialTheme.typography.body1,
+            modifier = Modifier.padding(top = 4.dp)
+          )
+        }
+
       }
 
       if (stock.quote == null) {
@@ -98,13 +105,16 @@ fun StockItem(
             style = MaterialTheme.typography.h5,
             color = if (changeIsPositive) Color.Green else Color.Red
           )
-          Text(
-            text = "$${stock.quote!!.currentPrice}",
-            style = MaterialTheme.typography.h6,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1,
-            modifier = Modifier.padding(top = 4.dp)
-          )
+          AnimatedContent(targetState = stock.quote!!.currentPrice) { targetText ->
+            Text(
+              text = "$${targetText}",
+              style = MaterialTheme.typography.h6,
+              overflow = TextOverflow.Ellipsis,
+              maxLines = 1,
+              modifier = Modifier.padding(top = 4.dp)
+            )
+          }
+
         }
 
       }
@@ -124,7 +134,15 @@ fun StockItemPreview() {
       stock = Stock(
         symbol = "APPL",
         name = "Apple",
-        company = null,
+        company = Company(
+          name = "Apple Inc",
+          industry = "Technology",
+          country = "US",
+          currency = "USD",
+          logoUrl = "",
+          marketCapitalization = 10.0,
+          weburl = ""
+        ),
         quote = Quote(2.0, 421.0)
       )
     )

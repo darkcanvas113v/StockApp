@@ -126,6 +126,10 @@ class StockDataSourceImpl @Inject constructor(
     lastLoadedStocks = stockSymbols
   }
 
+  override fun disconnect() {
+    webSocket.cancel()
+  }
+
   private suspend fun getCompanyInfo(symbol: String): Company? {
     return tryToLoad(
       tryBlock = {

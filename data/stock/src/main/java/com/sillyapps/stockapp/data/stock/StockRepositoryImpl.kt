@@ -63,5 +63,9 @@ class StockRepositoryImpl @Inject constructor(
     stockDataSource.loadStockPrices(stockSymbols)
   }
 
+  override fun disconnect() {
+    stockDataSource.disconnect()
+  }
+
 
 }

@@ -10,4 +10,6 @@ interface StockRepository {
 
   suspend fun loadStockPrices(stockSymbols: List<String>)
 
+  fun disconnect()
+
 }
