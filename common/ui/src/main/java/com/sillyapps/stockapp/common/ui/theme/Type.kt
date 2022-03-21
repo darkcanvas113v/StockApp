@@ -57,13 +57,11 @@ val Typography = Typography(
     ),
     h5 = TextStyle(
         fontWeight = FontWeight.W600,
-        fontSize = 20.sp
+        fontSize = 18.sp
     ),
     h6 = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 18.sp,
-        lineHeight = 20.sp,
-        letterSpacing = 3.sp
+        fontSize = 16.sp
     ),
     subtitle1 = TextStyle(
         fontWeight = FontWeight.Light,
@@ -78,7 +76,7 @@ val Typography = Typography(
     ),
     body1 = TextStyle(
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
+        fontSize = 14.sp,
         letterSpacing = 0.1.em
     ),
     body2 = TextStyle(

@@ -19,6 +19,7 @@ import com.sillyapps.stockapp.features.main_screen.ui.components.StockItem
 import com.sillyapps.stockapp.features.main_screen.ui.model.MainScreenState
 import com.sillyapps.stockapp.domain.stock.model.Stock
 import com.sillyapps.stockapp.common.ui.theme.AppTheme
+import com.sillyapps.stockapp.domain.stock.model.Quote
 import com.sillyapps.stockapp.features.main_screen.ui.components.DefaultFragment
 import com.sillyapps.stockapp.features.main_screen.ui.components.ErrorScreen
 import com.sillyapps.stockapp.features.main_screen.ui.components.LoadingFragment
@@ -63,10 +64,26 @@ fun MainScreen(
 @Composable
 fun MainScreenPreview() {
   val data = listOf(
-    Stock(symbol = "APPL", name = "Apple", price = 410.0, percentChange = 2.0),
-    Stock(symbol = "MICR", name = "Microsoft", price = 540.0, percentChange = 2.0),
-    Stock(symbol = "TESL", name = "Tesla", price = 109.0, percentChange = 2.0),
-    Stock(symbol = "AMAZ", name = "Amazon", price = 256.0, percentChange = 2.0),
+    Stock(
+      symbol = "APPL",
+      name = "Apple",
+      quote = Quote(currentPrice = 410.0, percentChange = 2.0),
+      company = null
+    ),
+    Stock(symbol = "MICR",
+      name = "Microsoft",
+      quote = Quote(currentPrice = 410.0, percentChange = 2.0),
+      company = null),
+    Stock(
+      symbol = "TESL",
+      name = "Tesla",
+      quote = Quote(currentPrice = 410.0, percentChange = 2.0),
+      company = null),
+    Stock(
+      symbol = "AMAZ",
+      name = "Amazon",
+      quote = Quote(currentPrice = 410.0, percentChange = 2.0),
+      company = null),
   )
 
   val state = flow {

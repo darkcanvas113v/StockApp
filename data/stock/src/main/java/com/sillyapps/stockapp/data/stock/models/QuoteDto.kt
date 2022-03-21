@@ -1,5 +1,6 @@
 package com.sillyapps.stockapp.data.stock.models
 
+import com.sillyapps.stockapp.domain.stock.model.Quote
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -29,3 +30,10 @@ data class QuoteDto(
   @Json(name = "t")
   val timeStamp: Long,
 )
+
+fun QuoteDto.toDomainModel(): Quote {
+  return Quote(
+    currentPrice = currentPrice,
+    percentChange = percentChange
+  )
+}

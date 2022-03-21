@@ -2,10 +2,14 @@ package com.sillyapps.stockapp.data.stock
 
 import com.sillyapps.core_di.modules.IOCoroutineScope
 import com.sillyapps.core_di.modules.IODispatcher
+import com.sillyapps.core_network.tryToLoad
 import com.sillyapps.core_util.BiDirectionalMap
 import com.sillyapps.core_util.modify
-import com.sillyapps.stockapp.data.stock.models.ServerMessageDto
-import com.sillyapps.stockapp.data.stock.models.ServerRequestDto
+import com.sillyapps.stockapp.data.stock.models.toDomainModel
+import com.sillyapps.stockapp.data.stock.models.trades_websocket.ServerMessageDto
+import com.sillyapps.stockapp.data.stock.models.trades_websocket.ServerRequestDto
+import com.sillyapps.stockapp.domain.stock.model.Company
+import com.sillyapps.stockapp.domain.stock.model.Quote
 import com.sillyapps.stockapp.domain.stock.model.Stock
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.CoroutineDispatcher
@@ -15,9 +19,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.*
-import retrofit2.HttpException
 import timber.log.Timber
-import java.io.IOException
 import javax.inject.Inject
 
 class StockDataSourceImpl @Inject constructor(
@@ -54,9 +56,13 @@ class StockDataSourceImpl @Inject constructor(
             val list = (mStocks.value)
 
             ioScope.launch(ioDispatcher) {
+              val value = list[index]
               mStocks.value = list.modify(
                   pos = index,
-                  value = list[index].copy(price = stockPrice.lastPrice))
+                  value = value.copy(
+                    quote = value.quote?.copy(
+                      currentPrice = stockPrice.lastPrice
+                    )))
             }
           }
         }
@@ -93,11 +99,24 @@ class StockDataSourceImpl @Inject constructor(
     for (stockSymbol in stockSymbols) {
       if (lastLoadedStocks.contains(stockSymbol)) continue
 
-      val stockPos = stockPosToSymbolMap.getByValue(stockSymbol)!!
-      val value = mStocks.value[stockPos]
+      val stockPos = stockPosToSymbolMap.getByValue(stockSymbol) ?: continue
+      var value = mStocks.value[stockPos]
+      var stockModified = false
 
-      val newStock = getStockPrice(value)
-      mStocks.value = mStocks.value.modify(stockPos, newStock)
+      if (value.company == null) {
+        val company = getCompanyInfo(stockSymbol)
+        value = value.copy(company = company)
+        stockModified = true
+      }
+
+      if (value.quote == null) {
+        val quote = getStockPrice(stockSymbol)
+        value = value.copy(quote = quote)
+        stockModified = true
+      }
+
+      if (stockModified)
+        mStocks.value = mStocks.value.modify(stockPos, value)
 
       val request = requestAdapter.toJson(ServerRequestDto(ServerRequestDto.TYPE_SUBSCRIBE, stockSymbol))
       Timber.e("Requesting: $request")
@@ -107,19 +126,32 @@ class StockDataSourceImpl @Inject constructor(
     lastLoadedStocks = stockSymbols
   }
 
-  private suspend fun getStockPrice(stock: Stock): Stock {
-    try {
-      val stockQuote = finnhubApi.getStockQuoteBySymbol(stock.symbol)
-      return stock.copy(
-        price = stockQuote.currentPrice,
-        percentChange = stockQuote.percentChange
-      )
-    } catch (e: HttpException) {
-      Timber.e(e.localizedMessage ?: "An unexpected error occured")
-    } catch (e: IOException) {
-      Timber.e("Couldn't reach server. Check your internet connection.")
-    }
-    return stock
+  private suspend fun getCompanyInfo(symbol: String): Company? {
+    return tryToLoad(
+      tryBlock = {
+        finnhubApi.getCompanyBySymbol(symbol).toDomainModel()
+      },
+      onHttpException = {
+        Timber.e("HttpException while trying to load company for symbol: $symbol")
+      },
+      onIOException = {
+        Timber.e("IOException while trying to load company for symbol: $symbol")
+      }
+    )
+  }
+
+  private suspend fun getStockPrice(symbol: String): Quote? {
+    return tryToLoad(
+      tryBlock = {
+        finnhubApi.getStockQuoteBySymbol(symbol).toDomainModel()
+      },
+      onHttpException = {
+        Timber.e("HttpException while trying to load quote for symbol: $symbol")
+      },
+      onIOException = {
+        Timber.e("IOException while trying to load quote for symbol: $symbol")
+      }
+    )
   }
 
 }

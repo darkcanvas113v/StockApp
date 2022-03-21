@@ -5,4 +5,6 @@
   <string name="try_again">Попробовать подключиться</string>
   <string name="unknown_error">Неизвестная ошибка.</string>
 
+  <string name="loading">Загрузка данных из сервера…</string>
+
 </resources>

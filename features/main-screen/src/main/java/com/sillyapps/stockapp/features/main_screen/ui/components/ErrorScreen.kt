@@ -2,6 +2,7 @@ package com.sillyapps.stockapp.features.main_screen.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
@@ -28,7 +29,8 @@ fun ErrorScreen(
           text = stringResource(id = R.string.no_internet),
           modifier = Modifier
             .padding(horizontal = 32.dp),
-          textAlign = TextAlign.Center
+          textAlign = TextAlign.Center,
+          style = MaterialTheme.typography.h5
         )
 
         TextButton(
@@ -46,7 +48,8 @@ fun ErrorScreen(
         text = stringResource(id = R.string.unknown_error),
         modifier = Modifier
           .padding(horizontal = 32.dp),
-        textAlign = TextAlign.Center
+        textAlign = TextAlign.Center,
+        style = MaterialTheme.typography.h5
       )
     }
   }

@@ -4,6 +4,6 @@ data class Stock(
   val symbol: String,
 
   val name: String,
-  val percentChange: Double?,
-  val price: Double?
+  val company: Company?,
+  val quote: Quote?
 )

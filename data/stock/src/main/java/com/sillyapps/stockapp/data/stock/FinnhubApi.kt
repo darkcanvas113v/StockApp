@@ -1,5 +1,6 @@
 package com.sillyapps.stockapp.data.stock
 
+import com.sillyapps.stockapp.data.stock.models.CompanyDto
 import com.sillyapps.stockapp.data.stock.models.QuoteDto
 import com.sillyapps.stockapp.data.stock.models.StockSymbolDto
 import retrofit2.http.GET
@@ -12,5 +13,8 @@ interface FinnhubApi {
 
   @GET("/api/v1/quote")
   suspend fun getStockQuoteBySymbol(@Query("symbol") symbol: String): QuoteDto
+
+  @GET("/api/v1/stock/profile2")
+  suspend fun getCompanyBySymbol(@Query("symbol") symbol: String): CompanyDto
 
 }
