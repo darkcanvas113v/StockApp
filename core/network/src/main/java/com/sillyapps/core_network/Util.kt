@@ -5,15 +5,15 @@ import java.io.IOException
 
 suspend fun<T> tryToLoad(
   tryBlock: suspend () -> T,
-  onIOException: () -> Unit,
-  onHttpException: () -> Unit,
+  onHttpException: (HttpException) -> Unit,
+  onIOException: (IOException) -> Unit,
 ): T? {
   try {
     return tryBlock()
   } catch (e: HttpException) {
-    onHttpException()
+    onHttpException(e)
   } catch (e: IOException) {
-    onIOException()
+    onIOException(e)
   }
   return null
 }

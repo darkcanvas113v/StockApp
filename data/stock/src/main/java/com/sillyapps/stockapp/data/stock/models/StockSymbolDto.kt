@@ -19,7 +19,7 @@ data class StockSymbolDto(
 
 fun StockSymbolDto.toDomainModel(): Stock {
     return Stock(
-        name = description,
+        name = description.ifBlank { symbol },
         symbol = symbol,
         quote = null,
         company = null

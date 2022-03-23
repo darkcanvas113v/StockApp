@@ -65,9 +65,9 @@ fun RowScope.CompanyInfo(stock: Stock) {
       .weight(1f)
       .padding(end = 8.dp)
   ) {
-    AnimatedContent(targetState = stock.company?.name) { targetText ->
+    AnimatedContent(targetState = stock.name) { targetText ->
       Text(
-        text = targetText ?: stock.name,
+        text = targetText,
         style = MaterialTheme.typography.h5,
         overflow = TextOverflow.Ellipsis,
         maxLines = 1

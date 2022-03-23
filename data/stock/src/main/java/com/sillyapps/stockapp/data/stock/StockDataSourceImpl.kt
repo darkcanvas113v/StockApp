@@ -105,7 +105,10 @@ class StockDataSourceImpl @Inject constructor(
 
       if (value.company == null) {
         val company = getCompanyInfo(stockSymbol)
-        value = value.copy(company = company)
+        value = value.copy(
+          name = company?.name ?: value.name,
+          company = company
+        )
         stockModified = true
       }
 
