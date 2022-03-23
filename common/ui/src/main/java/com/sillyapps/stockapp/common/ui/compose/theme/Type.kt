@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sillyapps.stockapp.common.ui.theme
+package com.sillyapps.stockapp.common.ui.compose.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

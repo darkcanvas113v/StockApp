@@ -1,6 +1,7 @@
 package com.sillyapps.stockapp.data.stock.di
 
 import android.content.Context
+import com.sillyapps.core_di.AppScope
 import com.sillyapps.core_di.FeatureScope
 import com.sillyapps.core_di.modules.IOCoroutineScope
 import com.sillyapps.core_di.modules.IOModule
@@ -10,7 +11,7 @@ import dagger.Component
 import kotlinx.coroutines.CoroutineScope
 import okhttp3.OkHttpClient
 
-@FeatureScope
+@AppScope
 @Component(modules = [IOModule::class, RemoteModule::class, RepositoryModule::class])
 interface StockDataComponent {
 

@@ -46,4 +46,6 @@ dependencies {
   implementation composeDeps.material
   implementation composeDeps.materialIcons
   implementation composeDeps.materialIconsExtended
+
+  implementation landscapistDep
 }

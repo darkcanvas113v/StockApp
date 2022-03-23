@@ -26,6 +26,7 @@
             <option value="$PROJECT_DIR$/domain/stock" />
             <option value="$PROJECT_DIR$/features" />
             <option value="$PROJECT_DIR$/features/main-screen" />
+            <option value="$PROJECT_DIR$/features/stock-detail-screen" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

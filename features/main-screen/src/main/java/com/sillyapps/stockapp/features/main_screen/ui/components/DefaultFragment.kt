@@ -3,14 +3,16 @@ package com.sillyapps.stockapp.features.main_screen.ui.components
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.sillyapps.stockapp.common.ui.compose.theme.AppTheme
 import com.sillyapps.stockapp.domain.stock.model.Stock
-import timber.log.Timber
+import com.sillyapps.stockapp.features.main_screen.ui.preview.PreviewConstants
 
 @Composable
 fun DefaultFragment(
@@ -47,6 +49,19 @@ fun DefaultFragment(
 
     items(items = items) { stock ->
       StockItem(stock = stock)
+    }
+  }
+}
+
+@Preview
+@Composable
+fun DefaultFragmentPreview() {
+  AppTheme {
+    Surface() {
+      DefaultFragment(
+        items = PreviewConstants.previewStocks,
+        onLoadPrices = {}
+      )
     }
   }
 }

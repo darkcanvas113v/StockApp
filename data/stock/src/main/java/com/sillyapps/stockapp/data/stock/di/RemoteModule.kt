@@ -16,7 +16,7 @@ import javax.inject.Qualifier
 @Module
 object RemoteModule {
 
-  @FeatureScope
+  @AppScope
   @Provides
   fun provideFinnhubApi(client: OkHttpClient): FinnhubApi {
     return Retrofit.Builder()
@@ -27,7 +27,7 @@ object RemoteModule {
       .create(FinnhubApi::class.java)
   }
 
-  @FeatureScope
+  @AppScope
   @Provides
   fun provideHttpClient(): OkHttpClient {
     val loggingInterceptor = HttpLoggingInterceptor()

@@ -11,6 +11,7 @@
       <module name="StockApp.data.stock" target="11" />
       <module name="StockApp.domain.stock" target="1.8" />
       <module name="StockApp.features.main-screen" target="11" />
+      <module name="StockApp.features.stock-detail-screen" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

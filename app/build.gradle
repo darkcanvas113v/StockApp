@@ -67,18 +67,10 @@ dependencies {
   implementation composeDeps.viewModel
   implementation composeDeps.navigation
 
-  implementation roomDeps.runtime
-  implementation roomDeps.ktx
-  kapt roomDeps.annotationProcessor
-  testImplementation roomDeps.testing
-
   implementation materialDep
 
   implementation daggerDeps.core
   kapt daggerDeps.annotationProcessor
-
-  implementation okHttpDeps.core
-  implementation okHttpDeps.loggingInterceptor
 
   implementation timberDep
 }

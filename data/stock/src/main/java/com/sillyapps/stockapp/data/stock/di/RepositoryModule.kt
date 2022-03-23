@@ -1,5 +1,6 @@
 package com.sillyapps.stockapp.data.stock.di
 
+import com.sillyapps.core_di.AppScope
 import com.sillyapps.core_di.FeatureScope
 import com.sillyapps.stockapp.data.stock.StockDataSource
 import com.sillyapps.stockapp.data.stock.StockDataSourceImpl
@@ -12,11 +13,11 @@ import dagger.Module
 interface RepositoryModule {
 
   @Binds
-  @FeatureScope
+  @AppScope
   fun bindStockRepository(repositoryImpl: StockRepositoryImpl): StockRepository
 
   @Binds
-  @FeatureScope
+  @AppScope
   fun bindStockDataSource(stockDataSourceImpl: StockDataSourceImpl): StockDataSource
 
 }

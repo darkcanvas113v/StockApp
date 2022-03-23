@@ -4,7 +4,7 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import com.sillyapps.stockapp.data.stock.di.StockDataComponent
 import com.sillyapps.stockapp.navigation.AppNavHost
-import com.sillyapps.stockapp.common.ui.theme.AppTheme
+import com.sillyapps.stockapp.common.ui.compose.theme.AppTheme
 
 @Composable
 fun RootContainer(
