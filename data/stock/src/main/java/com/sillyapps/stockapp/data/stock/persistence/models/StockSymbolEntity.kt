@@ -23,6 +23,6 @@ fun StockSymbolEntity.toDomainModel(): Stock {
 fun StockSymbolDto.toDatabaseModel(): StockSymbolEntity {
   return StockSymbolEntity(
     symbol = symbol,
-    name = description
+    name = description.ifBlank { symbol }
   )
 }
