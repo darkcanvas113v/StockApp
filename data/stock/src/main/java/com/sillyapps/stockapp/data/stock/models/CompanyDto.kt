@@ -24,7 +24,7 @@ fun CompanyDto.toDomainModel(): Company {
       name = name,
       country = country,
       currency = currency,
-      logoUrl = logo,
+      logoUrl = logo ?: "",
       marketCapitalization = marketCapitalization,
       weburl = weburl,
       industry = finnhubIndustry
