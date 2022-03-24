@@ -10,22 +10,22 @@ object PreviewConstants {
     Stock(
       symbol = "APPL",
       name = "Apple",
-      quote = Quote(currentPrice = 410.0, percentChange = 2.0),
+      quote = Quote(currentPrice = 410.0, percentChange = 2.0, 0),
       company = null
     ),
     Stock(symbol = "MICR",
       name = "Microsoft",
-      quote = Quote(currentPrice = 410.0, percentChange = 2.0),
+      quote = Quote(currentPrice = 410.0, percentChange = 2.0, 0),
       company = null),
     Stock(
       symbol = "TESL",
       name = "Tesla",
-      quote = Quote(currentPrice = 410.0, percentChange = 2.0),
+      quote = Quote(currentPrice = 410.0, percentChange = 2.0, 0),
       company = null),
     Stock(
       symbol = "AMAZ",
       name = "Amazon",
-      quote = Quote(currentPrice = 410.0, percentChange = 2.0),
+      quote = Quote(currentPrice = 410.0, percentChange = 2.0, 0),
       company = null),
   )
 

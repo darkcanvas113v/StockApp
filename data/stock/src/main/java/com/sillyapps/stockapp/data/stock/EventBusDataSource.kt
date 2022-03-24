@@ -17,8 +17,7 @@ class EventBusDataSource @Inject constructor() {
   fun get(): Flow<StockEvent> = eventBus
 
   fun onEvent(event: StockEvent) {
-    val result = eventBus.tryEmit(event)
-    Timber.e("Trying to emit event with message: ${event.message}, result = $result")
+    eventBus.tryEmit(event)
   }
 
 }

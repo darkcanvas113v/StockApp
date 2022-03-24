@@ -50,5 +50,9 @@ dependencies {
   implementation moshiDeps.core
   kapt moshiDeps.codegen
 
+  implementation roomDeps.runtime
+  implementation roomDeps.ktx
+  kapt roomDeps.annotationProcessor
+
   implementation timberDep
 }

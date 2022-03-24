@@ -6,9 +6,14 @@ import com.sillyapps.core_di.modules.IODispatcher
 import com.sillyapps.core_network.tryToLoad
 import com.sillyapps.core_util.BiDirectionalMap
 import com.sillyapps.core_util.modify
-import com.sillyapps.stockapp.data.stock.models.toDomainModel
-import com.sillyapps.stockapp.data.stock.models.trades_websocket.ServerMessageDto
-import com.sillyapps.stockapp.data.stock.models.trades_websocket.ServerRequestDto
+import com.sillyapps.stockapp.data.stock.persistence.CompanyDao
+import com.sillyapps.stockapp.data.stock.persistence.QuoteDao
+import com.sillyapps.stockapp.data.stock.persistence.models.toDatabaseModel
+import com.sillyapps.stockapp.data.stock.persistence.models.toDomainModel
+import com.sillyapps.stockapp.data.stock.remote.FinnhubApi
+import com.sillyapps.stockapp.data.stock.remote.models.toDomainModel
+import com.sillyapps.stockapp.data.stock.remote.models.trades_websocket.ServerMessageDto
+import com.sillyapps.stockapp.data.stock.remote.models.trades_websocket.ServerRequestDto
 import com.sillyapps.stockapp.domain.stock.model.Company
 import com.sillyapps.stockapp.domain.stock.model.Quote
 import com.sillyapps.stockapp.domain.stock.model.Stock
@@ -30,6 +35,10 @@ class StockDataSourceImpl @Inject constructor(
 
   private val httpClient: OkHttpClient,
   private val finnhubApi: FinnhubApi,
+
+  private val companyDao: CompanyDao,
+  private val quoteDao: QuoteDao,
+
   private val eventBusDataSource: EventBusDataSource,
   private val context: Context
 ): StockDataSource {
@@ -110,6 +119,7 @@ class StockDataSourceImpl @Inject constructor(
       if (value.company == null) {
         val company = getCompanyInfo(stockSymbol)
         value = value.copy(
+          // Replace stockSymbol name with more informative company name
           name = company?.name ?: value.name,
           company = company
         )
@@ -138,21 +148,26 @@ class StockDataSourceImpl @Inject constructor(
   }
 
   private suspend fun getCompanyInfo(symbol: String): Company? {
+    val companyFromDatabase = companyDao.getCompany(symbol)
+
+    if (companyFromDatabase != null) return companyFromDatabase.toDomainModel()
+
     return tryToLoad(
       tryBlock = {
-        finnhubApi.getCompanyBySymbol(symbol).toDomainModel()
+        val company = finnhubApi.getCompanyBySymbol(symbol)
+        companyDao.insert(company.toDatabaseModel(symbol))
+
+        company.toDomainModel()
       },
       onHttpException = {
         eventBusDataSource.onEvent(
           StockEvent(context.getString(R.string.unknown_error_company, symbol))
         )
-        Timber.e("HttpException while trying to load company for symbol: $symbol")
       },
       onIOException = {
         eventBusDataSource.onEvent(
           StockEvent(context.getString(R.string.no_internet))
         )
-        Timber.e("IOException while trying to load company for symbol: $symbol")
       }
     )
   }
@@ -160,19 +175,22 @@ class StockDataSourceImpl @Inject constructor(
   private suspend fun getStockPrice(symbol: String): Quote? {
     return tryToLoad(
       tryBlock = {
-        finnhubApi.getStockQuoteBySymbol(symbol).toDomainModel()
+        val quote = finnhubApi.getStockQuoteBySymbol(symbol)
+        quoteDao.insert(quote.toDatabaseModel(symbol))
+        quote.toDomainModel()
       },
       onHttpException = {
         eventBusDataSource.onEvent(
           StockEvent(context.getString(R.string.unknown_error_quote, symbol))
         )
-        Timber.e("HttpException while trying to load quote for symbol: $symbol")
       },
       onIOException = {
         eventBusDataSource.onEvent(
           StockEvent(context.getString(R.string.no_internet))
         )
-        Timber.e("IOException while trying to load quote for symbol: $symbol")
+      },
+      onErrorBlock = {
+        quoteDao.getCachedQuote(symbol)?.toDomainModel()
       }
     )
   }

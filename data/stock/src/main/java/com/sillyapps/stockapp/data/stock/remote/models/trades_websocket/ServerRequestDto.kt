@@ -1,4 +1,4 @@
-package com.sillyapps.stockapp.data.stock.models.trades_websocket
+package com.sillyapps.stockapp.data.stock.remote.models.trades_websocket
 
 import com.squareup.moshi.JsonClass
 

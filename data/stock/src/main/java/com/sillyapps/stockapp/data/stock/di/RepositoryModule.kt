@@ -1,7 +1,6 @@
 package com.sillyapps.stockapp.data.stock.di
 
 import com.sillyapps.core_di.AppScope
-import com.sillyapps.core_di.FeatureScope
 import com.sillyapps.stockapp.data.stock.StockDataSource
 import com.sillyapps.stockapp.data.stock.StockDataSourceImpl
 import com.sillyapps.stockapp.domain.stock.StockRepository

@@ -4,7 +4,11 @@ import com.sillyapps.core_di.modules.IOCoroutineScope
 import com.sillyapps.core_di.modules.IODispatcher
 import com.sillyapps.core_network.Resource
 import com.sillyapps.core_network.tryToLoad
-import com.sillyapps.stockapp.data.stock.models.toDomainModel
+import com.sillyapps.stockapp.data.stock.persistence.StockSymbolDao
+import com.sillyapps.stockapp.data.stock.persistence.models.toDatabaseModel
+import com.sillyapps.stockapp.data.stock.persistence.models.toDomainModel
+import com.sillyapps.stockapp.data.stock.remote.models.toDomainModel
+import com.sillyapps.stockapp.data.stock.remote.FinnhubApi
 import com.sillyapps.stockapp.domain.stock.model.Stock
 import com.sillyapps.stockapp.domain.stock.StockRepository
 import com.sillyapps.stockapp.domain.stock.model.StockEvent
@@ -14,6 +18,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class StockRepositoryImpl @Inject constructor(
@@ -21,10 +26,12 @@ class StockRepositoryImpl @Inject constructor(
   @IODispatcher private val ioDispatcher: CoroutineDispatcher,
 
   private val finnhubApi: FinnhubApi,
+
+  private val stockSymbolDao: StockSymbolDao,
+
   private val stockDataSource: StockDataSource,
   private val eventBusDataSource: EventBusDataSource,
-
-) : StockRepository {
+  ) : StockRepository {
 
   private val connectionStatus: MutableStateFlow<Resource<Unit>> =
     MutableStateFlow(Resource.Loading())
@@ -42,10 +49,19 @@ class StockRepositoryImpl @Inject constructor(
     ioScope.launch(ioDispatcher) {
       connectionStatus.value = Resource.Loading()
 
+      if (stockSymbolDao.isCached()) {
+        val stocks = stockSymbolDao.getAll().map { it.toDomainModel() }
+        stockDataSource.setInitialStocks(stocks)
+        connectionStatus.value = Resource.Success(Unit)
+        return@launch
+      }
+
       tryToLoad(
         tryBlock = {
-          val stocks = finnhubApi.getStocks().map { it.toDomainModel() }
-          stockDataSource.setInitialStocks(stocks)
+          val stocks = finnhubApi.getStocks()
+          stockSymbolDao.insertAll(stocks.map { it.toDatabaseModel() })
+
+          stockDataSource.setInitialStocks(stocks.map { it.toDomainModel() })
           connectionStatus.value = Resource.Success(Unit)
         },
         onIOException = {

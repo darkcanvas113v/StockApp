@@ -1,8 +1,8 @@
-package com.sillyapps.stockapp.data.stock
+package com.sillyapps.stockapp.data.stock.remote
 
-import com.sillyapps.stockapp.data.stock.models.CompanyDto
-import com.sillyapps.stockapp.data.stock.models.QuoteDto
-import com.sillyapps.stockapp.data.stock.models.StockSymbolDto
+import com.sillyapps.stockapp.data.stock.remote.models.CompanyDto
+import com.sillyapps.stockapp.data.stock.remote.models.QuoteDto
+import com.sillyapps.stockapp.data.stock.remote.models.StockSymbolDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 

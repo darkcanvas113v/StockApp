@@ -12,7 +12,8 @@ import kotlinx.coroutines.CoroutineScope
 import okhttp3.OkHttpClient
 
 @AppScope
-@Component(modules = [IOModule::class, RemoteModule::class, RepositoryModule::class])
+@Component(
+  modules = [IOModule::class, RemoteModule::class, RepositoryModule::class, DatabaseModule::class])
 interface StockDataComponent {
 
   fun getRepository(): StockRepository

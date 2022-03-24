@@ -1,8 +1,7 @@
 package com.sillyapps.stockapp.data.stock.di
 
 import com.sillyapps.core_di.AppScope
-import com.sillyapps.core_di.FeatureScope
-import com.sillyapps.stockapp.data.stock.FinnhubApi
+import com.sillyapps.stockapp.data.stock.remote.FinnhubApi
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
@@ -11,7 +10,6 @@ import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import javax.inject.Qualifier
 
 @Module
 object RemoteModule {

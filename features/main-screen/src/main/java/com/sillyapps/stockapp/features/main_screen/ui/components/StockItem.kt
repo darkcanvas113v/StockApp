@@ -140,7 +140,7 @@ fun StockItemPreview() {
           marketCapitalization = 10.0,
           weburl = ""
         ),
-        quote = Quote(2.0, 421.0)
+        quote = Quote(2.0, 421.0, 0)
       )
     )
   }

@@ -7,13 +7,15 @@ suspend fun<T> tryToLoad(
   tryBlock: suspend () -> T,
   onHttpException: (HttpException) -> Unit,
   onIOException: (IOException) -> Unit,
+  onErrorBlock: suspend () -> T? = { null }
 ): T? {
-  try {
-    return tryBlock()
+  return try {
+    tryBlock()
   } catch (e: HttpException) {
     onHttpException(e)
+    onErrorBlock()
   } catch (e: IOException) {
     onIOException(e)
+    onErrorBlock()
   }
-  return null
 }

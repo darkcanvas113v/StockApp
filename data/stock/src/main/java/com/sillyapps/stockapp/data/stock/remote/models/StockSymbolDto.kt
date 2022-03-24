@@ -1,4 +1,4 @@
-package com.sillyapps.stockapp.data.stock.models
+package com.sillyapps.stockapp.data.stock.remote.models
 
 import com.sillyapps.stockapp.domain.stock.model.Stock
 import com.squareup.moshi.JsonClass

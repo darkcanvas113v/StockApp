@@ -1,4 +1,4 @@
-package com.sillyapps.stockapp.data.stock.models
+package com.sillyapps.stockapp.data.stock.remote.models
 
 import com.sillyapps.stockapp.domain.stock.model.Quote
 import com.squareup.moshi.Json
@@ -34,6 +34,7 @@ data class QuoteDto(
 fun QuoteDto.toDomainModel(): Quote {
   return Quote(
     currentPrice = currentPrice,
-    percentChange = percentChange
+    percentChange = percentChange,
+    timestamp = timeStamp
   )
 }
