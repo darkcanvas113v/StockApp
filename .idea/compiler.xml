@@ -5,6 +5,7 @@
       <module name="StockApp.app" target="11" />
       <module name="StockApp.common.network" target="1.8" />
       <module name="StockApp.common.ui" target="11" />
+      <module name="StockApp.core.android-utils" target="11" />
       <module name="StockApp.core.di" target="1.8" />
       <module name="StockApp.core.network" target="1.8" />
       <module name="StockApp.core.ui" target="11" />

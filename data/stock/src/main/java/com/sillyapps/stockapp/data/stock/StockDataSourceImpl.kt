@@ -1,5 +1,6 @@
 package com.sillyapps.stockapp.data.stock
 
+import android.content.Context
 import com.sillyapps.core_di.modules.IOCoroutineScope
 import com.sillyapps.core_di.modules.IODispatcher
 import com.sillyapps.core_network.tryToLoad
@@ -11,6 +12,7 @@ import com.sillyapps.stockapp.data.stock.models.trades_websocket.ServerRequestDt
 import com.sillyapps.stockapp.domain.stock.model.Company
 import com.sillyapps.stockapp.domain.stock.model.Quote
 import com.sillyapps.stockapp.domain.stock.model.Stock
+import com.sillyapps.stockapp.domain.stock.model.StockEvent
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -27,7 +29,9 @@ class StockDataSourceImpl @Inject constructor(
   @IODispatcher private val ioDispatcher: CoroutineDispatcher,
 
   private val httpClient: OkHttpClient,
-  private val finnhubApi: FinnhubApi
+  private val finnhubApi: FinnhubApi,
+  private val eventBusDataSource: EventBusDataSource,
+  private val context: Context
 ): StockDataSource {
 
   private var lastLoadedStocks: List<String> = emptyList()
@@ -139,9 +143,15 @@ class StockDataSourceImpl @Inject constructor(
         finnhubApi.getCompanyBySymbol(symbol).toDomainModel()
       },
       onHttpException = {
+        eventBusDataSource.onEvent(
+          StockEvent(context.getString(R.string.unknown_error_company, symbol))
+        )
         Timber.e("HttpException while trying to load company for symbol: $symbol")
       },
       onIOException = {
+        eventBusDataSource.onEvent(
+          StockEvent(context.getString(R.string.no_internet))
+        )
         Timber.e("IOException while trying to load company for symbol: $symbol")
       }
     )
@@ -153,9 +163,15 @@ class StockDataSourceImpl @Inject constructor(
         finnhubApi.getStockQuoteBySymbol(symbol).toDomainModel()
       },
       onHttpException = {
+        eventBusDataSource.onEvent(
+          StockEvent(context.getString(R.string.unknown_error_quote, symbol))
+        )
         Timber.e("HttpException while trying to load quote for symbol: $symbol")
       },
       onIOException = {
+        eventBusDataSource.onEvent(
+          StockEvent(context.getString(R.string.no_internet))
+        )
         Timber.e("IOException while trying to load quote for symbol: $symbol")
       }
     )

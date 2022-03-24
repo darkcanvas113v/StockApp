@@ -20,38 +20,24 @@ fun ErrorScreen(
   error: Resource.Error<List<Stock>>,
   onReload: () -> Unit
 ) {
-  when (error.type) {
-    Resource.Error.Type.BAD_CONNECTION -> {
-      Column(
-        horizontalAlignment = Alignment.CenterHorizontally
-      ) {
-        Text(
-          text = stringResource(id = R.string.no_internet),
-          modifier = Modifier
-            .padding(horizontal = 32.dp),
-          textAlign = TextAlign.Center,
-          style = MaterialTheme.typography.h5
-        )
+  Column(
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+    Text(
+      text = stringResource(id = R.string.no_internet),
+      modifier = Modifier
+        .padding(horizontal = 32.dp),
+      textAlign = TextAlign.Center,
+      style = MaterialTheme.typography.h5
+    )
 
-        TextButton(
-          onClick = onReload,
-          modifier = Modifier.padding(top = 16.dp)
-        ) {
-          Text(
-            text = stringResource(id = R.string.try_again)
-          )
-        }
-      }
-    }
-    Resource.Error.Type.UNKNOWN -> {
+    TextButton(
+      onClick = onReload,
+      modifier = Modifier.padding(top = 16.dp)
+    ) {
       Text(
-        text = stringResource(id = R.string.unknown_error),
-        modifier = Modifier
-          .padding(horizontal = 32.dp),
-        textAlign = TextAlign.Center,
-        style = MaterialTheme.typography.h5
+        text = stringResource(id = R.string.try_again)
       )
     }
   }
-
 }

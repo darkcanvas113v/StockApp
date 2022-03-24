@@ -6,9 +6,12 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import com.sillyapps.core_ui.showToast
 import com.sillyapps.stockapp.features.main_screen.ui.model.MainScreenState
 import com.sillyapps.stockapp.common.ui.compose.theme.AppTheme
+import com.sillyapps.stockapp.domain.stock.model.StockEvent
 import com.sillyapps.stockapp.features.main_screen.ui.components.DefaultFragment
 import com.sillyapps.stockapp.features.main_screen.ui.components.ErrorScreen
 import com.sillyapps.stockapp.features.main_screen.ui.components.LoadingFragment
@@ -21,6 +24,17 @@ import kotlinx.coroutines.flow.flow
 fun MainScreen(
   stateHolder: StateHolder
 ) {
+  val event by remember(stateHolder) {
+    stateHolder.getEventBus()
+  }.collectAsState(initial = StockEvent(""))
+
+  val context = LocalContext.current
+
+  if (event.message.isNotBlank())
+    LaunchedEffect(key1 = event.message) {
+      showToast(context, event.message)
+    }
+
   val state by remember(stateHolder) {
     stateHolder.getState()
   }.collectAsState(initial = MainScreenState())
@@ -67,6 +81,11 @@ fun MainScreenPreview() {
 
     override fun reload() {
 
+    }
+
+    override fun getEventBus(): Flow<StockEvent> = flow {
+      delay(10000L)
+      emit(StockEvent("1, 2, 3... check"))
     }
   }
 

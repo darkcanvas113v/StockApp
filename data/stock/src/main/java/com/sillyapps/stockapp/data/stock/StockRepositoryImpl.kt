@@ -7,14 +7,13 @@ import com.sillyapps.core_network.tryToLoad
 import com.sillyapps.stockapp.data.stock.models.toDomainModel
 import com.sillyapps.stockapp.domain.stock.model.Stock
 import com.sillyapps.stockapp.domain.stock.StockRepository
+import com.sillyapps.stockapp.domain.stock.model.StockEvent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
-import java.io.IOException
 import javax.inject.Inject
 
 class StockRepositoryImpl @Inject constructor(
@@ -22,7 +21,9 @@ class StockRepositoryImpl @Inject constructor(
   @IODispatcher private val ioDispatcher: CoroutineDispatcher,
 
   private val finnhubApi: FinnhubApi,
-  private val stockDataSource: StockDataSource
+  private val stockDataSource: StockDataSource,
+  private val eventBusDataSource: EventBusDataSource,
+
 ) : StockRepository {
 
   private val connectionStatus: MutableStateFlow<Resource<Unit>> =
@@ -39,6 +40,8 @@ class StockRepositoryImpl @Inject constructor(
 
   override fun getStocks(): Flow<Resource<List<Stock>>> {
     ioScope.launch(ioDispatcher) {
+      connectionStatus.value = Resource.Loading()
+
       tryToLoad(
         tryBlock = {
           val stocks = finnhubApi.getStocks().map { it.toDomainModel() }
@@ -70,6 +73,8 @@ class StockRepositoryImpl @Inject constructor(
   override fun disconnect() {
     stockDataSource.disconnect()
   }
+
+  override fun getEventBus(): Flow<StockEvent> = eventBusDataSource.get()
 
 
 }

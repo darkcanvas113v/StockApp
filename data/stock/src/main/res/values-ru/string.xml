@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="no_internet">Невозможно подключиться к серверу, проверьте подключение к интернету.</string>
+  <string name="unknown_error_company">Неизвестная ошибка при загрузке информации о компании: %1$s.</string>
+  <string name="unknown_error_quote">Неизвестная ошибка при загрузке информации о котировках акции: %1$s.</string>
+</resources>
