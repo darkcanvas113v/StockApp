@@ -32,9 +32,14 @@ fun RemoteCircleImage(
   url: String?,
   modifier: Modifier = Modifier
 ) {
-  if (url == null)
-    RemoteImageLoading(modifier)
-  else
+  var isLoading by remember {
+    mutableStateOf(true)
+  }
+
+  Box {
+    if (isLoading)
+      RemoteImageLoading(modifier)
+
     GlideImage(
       imageModel = url,
       contentScale = ContentScale.Crop,
@@ -52,29 +57,30 @@ fun RemoteCircleImage(
               .background(MaterialTheme.colors.onBackground)
           )
         }
-      },
-      loading = {
-        RemoteImageLoading(modifier)
+        isLoading = false
       },
       failure = {
-        Box(
-          modifier = modifier
-            .clip(CircleShape)
-            .background(Color.LightGray)
-        ) {
-          Image(
-            painter = painterResource(id = R.drawable.ic_baseline_broken_image_24),
-            contentDescription = null,
-            modifier = Modifier
-              .padding(4.dp)
-              .fillMaxSize(),
-            colorFilter = ColorFilter.tint(Color.Gray)
-          )
+        if (url != null) {
+          Box(
+            modifier = modifier
+              .clip(CircleShape)
+              .background(Color.LightGray)
+          ) {
+            Image(
+              painter = painterResource(id = R.drawable.ic_baseline_broken_image_24),
+              contentDescription = null,
+              modifier = Modifier
+                .padding(4.dp)
+                .fillMaxSize(),
+              colorFilter = ColorFilter.tint(Color.Gray)
+            )
+          }
+          isLoading = false
         }
-
       },
       previewPlaceholder = R.drawable.ic_baseline_android_24
     )
+  }
 }
 
 @Composable
